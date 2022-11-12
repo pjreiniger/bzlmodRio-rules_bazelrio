@@ -2,8 +2,8 @@
 def __prepare_halsim(halsim_deps):
     extension_names = []
     for dep in halsim_deps:
-        lbl = Label(dep)
-        extension_names.append(lbl.name)
+        name = dep[dep.find(":")+1:]
+        extension_names.append(name)
 
     return extension_names
 
