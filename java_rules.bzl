@@ -45,3 +45,25 @@ def bazelrio_java_binary(name, deps = [], data=[], runtime_deps=[], **kwargs):
         }),
         **kwargs
     )
+
+def bazelrio_java_test(name, deps = [], data=[], runtime_deps=[], **kwargs):
+    # We must have the shared libraries live next to the binary
+    native_shared_libraries_symlink = name + ".symlink_native"
+    _symlink_java_native_libraries(
+        name = native_shared_libraries_symlink,
+        deps = deps + runtime_deps,
+        output_directory = select({
+            "@bazel_tools//src/conditions:windows": name + ".exe.runfiles/_main",
+            "//conditions:default": name + ".runfiles/__main__",
+        }),
+    )
+
+    native.java_test(
+        name = name,
+        deps = deps,
+        runtime_deps = runtime_deps,
+        data = data + select({
+            "//conditions:default": [native_shared_libraries_symlink],
+        }),
+        **kwargs
+    )

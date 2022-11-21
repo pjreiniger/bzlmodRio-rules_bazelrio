@@ -1,11 +1,9 @@
 
 def get_dynamic_deps(target):
-    print("Getting dynamic deps", target)
     shared_lib_native_deps = []
 
     if CcInfo in target:
         for linker_input in target[CcInfo].linking_context.linker_inputs.to_list():
-            print(linker_input)
             for library in linker_input.libraries:
                 if library.dynamic_library and not library.static_library:
                     shared_lib_native_deps.append(library.dynamic_library)

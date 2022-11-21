@@ -14,14 +14,11 @@ def halsim_cc_binary(
     halsim_deps = [],
     **kwargs
 ):
-    print(deps)
     extension_names = __prepare_halsim(halsim_deps)
     env = select({
         "@bazel_tools//src/conditions:windows": {"HALSIM_EXTENSIONS": ";".join(extension_names)},
         "//conditions:default": {"HALSIM_EXTENSIONS": ":".join(extension_names)},
     })
-
-    print(env)
 
     native.cc_binary(
         name = name,
